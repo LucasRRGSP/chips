@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Chips{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+
+  <h1 class="text-3xl font-bold mb-6 text-white">Chips Cadastrados</h1>
+  <p class="text-white mb-2">Total de chips: <strong>{{ chips|length }}</strong></p>
+
+  <!-- Filtros -->
+<form method="GET" class="mb-6 bg-gray-800 p-4 rounded-lg shadow flex flex-wrap gap-4">
+  <input type="text" name="usuario" value="{{ request.args.get('usuario', '') }}" placeholder="Usuário"class="px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 flex-1" />
+  <input type="text" name="numero" value="{{ request.args.get('numero', '') }}" placeholder="Número do Celular" class="px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 flex-1" />
+
+  <select name="estado" class="px-3 py-2 bg-gray-700 text-white rounded border border-gray-600">
+    <option value=""> Todos </option>
+    <option value="Ativo" {% if request.args.get('estado') == 'Ativo' %}selected{% endif %}>Ativo</option>
+    <option value="Banido" {% if request.args.get('estado') == 'Banido' %}selected{% endif %}>Banido</option>
+    <option value="Desbanido" {% if request.args.get('estado') == 'Desbanido' %}selected{% endif %}>Desbanido</option>
+    <option value="Desconectado" {% if request.args.get('estado') == 'Desconectado' %}selected{% endif %}>Desconectado</option>
+    <option value="Descartado" {% if request.args.get('estado') == 'Descartado' %}selected{% endif %}>Descartado</option>
+  </select>
+
+  <input type="date" name="data_ini" value="{{ request.args.get('data_ini', '') }}"class="px-3 py-2 bg-gray-700 text-white rounded border border-gray-600" />
+  <input type="date" name="data_fim" value="{{ request.args.get('data_fim', '') }}" class="px-3 py-2 bg-gray-700 text-white rounded border border-gray-600" />
+
+  <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500">
+    Filtrar
+  </button>
+  <a href="{{ url_for('chips.listar_chips') }}" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-500">
+    Limpar
+  </a>
+</form>
+
+
+
+
+  <!-- Tabela dos chips -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border border-gray-700 rounded">
+      <thead class="bg-gray-700 text-white">
+        <tr>
+          <!-- Nenhuma <th> para ID -->
+          <th class="px-4 py-2 border border-gray-600">Número</th>
+          <th class="px-4 py-2 border border-gray-600">Estado Atual</th>
+          <th class="px-4 py-2 border border-gray-600">Operadora</th>
+          <th class="px-4 py-2 border border-gray-600">Data Cadastro</th>
+          <th class="px-4 py-2 border border-gray-600">Usuário</th>
+          <th class="px-4 py-2 border border-gray-600">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for chip in chips %}
+        <tr class="even:bg-gray-700 odd:bg-gray-800 text-white">
+          <!-- Nenhum <td> para chip.Id -->
+          <td class="px-4 py-2 border border-gray-600">{{ chip.NumeroCelular }}</td>
+          <td class="px-4 py-2 border border-gray-600 capitalize">{{ chip.EstadoAtual }}</td>
+          <td class="px-4 py-2 border border-gray-600">{{ chip.Operadora }}</td>
+          <td class="px-4 py-2 border border-gray-600">{{ chip.DataCadastro.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td class="px-4 py-2 border border-gray-600">{{ chip.Usuario }}</td>
+          <td class="px-4 py-2 border border-gray-600">
+            <a href="{{ url_for('chips.editar_chip', id=chip.Id) }}" class="text-blue-400 hover:underline mr-2">Editar</a>
+            <form action="{{ url_for('chips.excluir_chip', id=chip.Id) }}" method="POST" class="inline" onsubmit="return confirm('Excluir chip {{ chip.NumeroCelular }}?');">
+              <button type="submit" class="text-red-500 hover:underline">Excluir</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="8" class="px-4 py-2 border border-gray-600 text-center text-white">Nenhum chip encontrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

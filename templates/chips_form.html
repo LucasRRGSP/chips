@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-light">{{ 'Editar' if chip else 'Novo' }} Chip</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label text-light">Número do Chip</label>
+      <input type="text" name="numero" class="form-control" value="{{ chip[1] if chip else '' }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label text-light">Status</label>
+      <select name="status" class="form-control" required>
+        <option value="disponivel" {% if chip and chip[2]=='disponivel' %}selected{% endif %}>Disponível</option>
+        <option value="banido" {% if chip and chip[2]=='banido' %}selected{% endif %}>Banido</option>
+        <option value="em_uso" {% if chip and chip[2]=='em_uso' %}selected{% endif %}>Em Uso</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label text-light">Última Utilização</label>
+      <input type="date" name="ultima_utilizacao" class="form-control" value="{{ chip[3] if chip and chip[3] else '' }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label text-light">Próxima Disponibilidade</label>
+      <input type="date" name="proxima_disponibilidade" class="form-control" value="{{ chip[4] if chip and chip[4] else '' }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label text-light">Observações</label>
+      <textarea name="observacoes" class="form-control">{{ chip[5] if chip else '' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{{ url_for('chips.listar_chips') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

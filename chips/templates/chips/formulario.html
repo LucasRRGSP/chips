@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ 'Editar Chip' if chip else 'Novo Chip' }}{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
+  <h2 class="text-2xl font-semibold mb-4">{{ 'Editar Chip' if chip else 'Cadastrar Novo Chip' }}</h2>
+
+  <form method="POST">
+    <div class="mb-4">
+      <label for="NumeroCelular" class="block mb-1">Número do Celular</label>
+      <input type="text" name="NumeroCelular" id="NumeroCelular" required
+             value="{{ request.form.get('NumeroCelular', chip.NumeroCelular if chip else '') }}"
+             class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+             placeholder="(11) 91234-5678">
+    </div>
+
+    <div class="mb-4">
+      <label for="Operadora" class="block mb-1">Operadora</label>
+      <input type="text" name="Operadora" id="Operadora"
+             value="{{ request.form.get('Operadora', chip.Operadora if chip else 'VIVO') }}"
+             class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+             placeholder="Vivo, Tim, Claro...">
+    </div>
+
+    <div class="mb-4">
+      <label for="EstadoAtual" class="block mb-1">Estado Atual</label>
+      <select name="EstadoAtual" id="EstadoAtual" required
+              class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        {% set estado_atual = request.form.get('EstadoAtual', chip.EstadoAtual if chip else '') %}
+        <option value="">-- Selecione --</option>
+        <option value="ativo" {% if estado_atual == 'ativo' %}selected{% endif %}>Ativo</option>
+        <option value="desconectado" {% if estado_atual == 'desconectado' %}selected{% endif %}>Desconectado</option>
+        <option value="banido" {% if estado_atual == 'banido' %}selected{% endif %}>Banido</option>
+        <option value="desbanido" {% if estado_atual == 'desbanido' %}selected{% endif %}>Desbanido</option>
+      </select>
+    </div>
+
+     <div class="mb-4">
+      <label for="Usuario" class="block mb-1">Usuário Responsável</label>
+      <input type="text" name="Usuario" id="Usuario"
+             value="{{ request.form.get('Usuario', chip.Usuario if chip else 'LIVRE') }}"
+             class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+             placeholder="Nome do usuário">
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <a href="{{ url_for('chips.listar_chips') }}" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-500">
+        Voltar
+      </a>
+      <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-500">
+        {{ 'Salvar Alterações' if chip else 'Cadastrar' }}
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

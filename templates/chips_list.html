@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-light">📱 Controle de Chips</h2>
+  <a href="{{ url_for('chips.novo_chip') }}" class="btn btn-success mb-3">+ Novo Chip</a>
+
+  <table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Número</th>
+        <th>Status</th>
+        <th>Última Utilização</th>
+        <th>Próxima Disponibilidade</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for chip in chips %}
+      <tr>
+        <td>{{ chip[0] }}</td>
+        <td>{{ chip[1] }}</td>
+        <td>
+          {% if chip[2] == "disponivel" %}
+            <span class="badge bg-success">Disponível</span>
+          {% elif chip[2] == "banido" %}
+            <span class="badge bg-danger">Banido</span>
+          {% else %}
+            <span class="badge bg-warning text-dark">Em uso</span>
+          {% endif %}
+        </td>
+        <td>{{ chip[3] or "-" }}</td>
+        <td>{{ chip[4] or "-" }}</td>
+        <td>
+          <a href="{{ url_for('chips.editar_chip', id=chip[0]) }}" class="btn btn-primary btn-sm">Editar</a>
+          <form action="{{ url_for('chips.deletar_chip', id=chip[0]) }}" method="POST" style="display:inline">
+            <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
