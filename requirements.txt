@@ -1,8 +1,6 @@
-Flask==2.3.2
+flask==3.0.3
 gunicorn==21.2.0
-psycopg2-binary
-Flask-Mail==0.9.1
-python-dotenv==1.0.0
+psycopg2-binary==2.9.9
+flask-mail==0.10.0
+python-dotenv==1.0.1
 pandas==2.2.2
-
-
